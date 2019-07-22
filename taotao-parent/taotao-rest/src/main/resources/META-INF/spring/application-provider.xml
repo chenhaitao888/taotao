@@ -1,0 +1,23 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+  
+    <!-- 指定dubbo的服务名称 -->  
+    <dubbo:application name="rest_provider"></dubbo:application>
+    <!-- 使用multicast广播注册中心暴露服务地址 -->  
+    <!-- <dubbo:registry protocol="zookeeper" address="zookeeper://192.168.18.25:2181" /> -->  
+    <dubbo:registry id="zk1" address="192.168.98.143:2181" protocol="zookeeper"></dubbo:registry>  
+    <!-- 用dubbo协议在20880端口暴露服务 -->  
+    <dubbo:protocol id="mydubbo" name="dubbo" port="20880" />  
+    <dubbo:provider registry="zk1" protocol="mydubbo"/>
+  
+    <!-- 具体的实现bean -->  
+    <bean id="contentService" class="com.taotao.rest.service.ipml.ContentServiceImpl" />  
+  
+    <!-- 声明需要暴露的服务接口 -->  
+    <dubbo:service interface="com.taotao.rest.api.ContentService1" ref="contentService" /> 
+    <!-- 扫描注解包路径，多个包用逗号分隔，不填pacakge表示当前ApplicationContext中所有的类 -->
+   <!-- <dubbo:annotation package="com.taotao.rest.api"></dubbo:annotation> -->
+</beans>

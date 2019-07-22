@@ -1,0 +1,17 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+  
+    <!-- 指定生成者 -->  
+    <dubbo:application name="rest_consumer" />  
+  
+    <!-- 使用multicast广播注册中心暴露服务地址 -->  
+  	<!-- <dubbo:registry  address="zookeeper://192.168.98.143:2181"/> -->
+  	<dubbo:registry id="zk1" address="192.168.98.143:2181" protocol="zookeeper"/>
+  	<dubbo:consumer registry="zk1"/>
+      <!-- 扫描注解包路径，多个包用逗号分隔，不填package表示扫描当前ApplicationContext中的所有类 -->
+    <!-- <dubbo:annotation package="com.taotao.rest.api"></dubbo:annotation> -->
+    <dubbo:reference id="contentService" interface="com.taotao.rest.api.ContentService1" />
+</beans>
