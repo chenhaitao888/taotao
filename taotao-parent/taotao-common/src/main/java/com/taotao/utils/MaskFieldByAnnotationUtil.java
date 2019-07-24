@@ -1,18 +1,22 @@
 package com.taotao.utils;
 
-import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.taotao.BeanConfig;
+import com.taotao.ResolvableParameter;
 import com.taotao.annotation.MaskCodeAnnotation;
-import com.taotao.enums.MaskLevelEnum;
-import com.taotao.factory.MaskExecutor;
 import com.taotao.factory.MaskFactory;
 import com.taotao.pojo.BaseDto;
+import com.taotao.strategy.MaskStrategy;
 
 public class MaskFieldByAnnotationUtil<T extends BaseDto> {
 	private MaskFieldByAnnotationUtil() {
@@ -23,75 +27,56 @@ public class MaskFieldByAnnotationUtil<T extends BaseDto> {
 	private Logger logger = LoggerFactory.getLogger(MaskFieldByAnnotationUtil.class);
 
 	public void maskField(T t) throws Exception {
-		MaskLevelEnum maskLevel;
-		/* 获取所有字段 */
-		Field[] fields = t.getClass().getDeclaredFields();
-		/* 获取父亲类的所有字段 */
-		Field[] pields = t.getClass().getSuperclass().getDeclaredFields();
 		Map<String, String> describe = BeanUtils.describe(t);
-		for (Field field : fields) {
-			// 获取字段中包含MaskCodeAnnotation注解的字段
-			MaskCodeAnnotation annotation = field.getAnnotation(MaskCodeAnnotation.class);
-			if (annotation != null) {
-				String str = describe.get(field.getName());
-				if (StringUtils.isNotBlank(str)) {
-					maskLevel = annotation.maskLevel();
-					if (maskLevel == MaskLevelEnum.LARGELEVEL) {
-						maskCommon(str, defaultIndex, str.length(), '*', field, t);
-					} else if (maskLevel == MaskLevelEnum.DEFAULTLEVEL) {
-
-					} else if (maskLevel == MaskLevelEnum.CARDLEVEL) {
-						String key = annotation.key();
-						String cardType = describe.get(key);
-						MaskExecutor<T> executor = MaskFactory.getExecutor(cardType, str, field, t);
-						executor.process();
-					} else {
-						int beginIndex = maskLevel.getBeginIndex();
-						int endIndex = maskLevel.getEndIndex();
-						if (endIndex == Integer.MAX_VALUE) {
-							logger.info("endIndex" + endIndex);
-							maskCommon(str, beginIndex, str.length(), '*', field, t);
-						} else {
-							maskCommon(str, beginIndex, endIndex, '*', field, t);
-						}
-					}
-				}
-			}
+		BeanConfig bean = new BeanConfig(describe, t);
+		List<ResolvableParameter> restFields = bean.getRestFields(t.getClass());
+		for (ResolvableParameter parameter : restFields) {
+			mask(parameter);
 		}
-
-		for (Field field : pields) {
-			MaskCodeAnnotation annotation = field.getAnnotation(MaskCodeAnnotation.class);
-			if (annotation != null) {
-				String str = describe.get(field.getName());
-				if (StringUtils.isNotBlank(str)) {
-					maskLevel = annotation.maskLevel();
-					if (maskLevel == MaskLevelEnum.LARGELEVEL) {
-						maskCommon(str, defaultIndex, str.length(), '*', field, t);
-					} else if (maskLevel == MaskLevelEnum.CARDLEVEL) {
-						String key = annotation.key();
-						String cardType = describe.get(key);
-						MaskExecutor<T> executor = MaskFactory.getExecutor(cardType, str, field, t);
-						executor.process();
-					} else {
-						int beginIndex = maskLevel.getBeginIndex();
-						int endIndex = maskLevel.getEndIndex();
-						if (endIndex == Integer.MAX_VALUE) {
-							logger.info("endIndex" + endIndex);
-							maskCommon(str, beginIndex, str.length(), '*', field, t);
-						} else {
-							maskCommon(str, beginIndex, endIndex, '*', field, t);
-						}
-					}
-				}
-			}
-		}
-
 	}
 
-	public void maskCommon(String str, int beginIndex, int endIndex, char cover, Field field, T t) throws Exception {
-		String maskSubWay = MaskCodeUtil.getMaskSubWay(str, beginIndex, endIndex, '*');
-		field.setAccessible(true);
-		field.set(t, maskSubWay);
+	private void mask(ResolvableParameter parameter) throws Exception {
+		if (parameter.getParameterType() == parameter.P_DEFAULT) {
+			maskProtery(parameter);
+		}
+		if (parameter.getParameterType() == parameter.P_COLLECTION) {
+			maskCollectionProperty(parameter);
+		}
+	}
+
+	private void maskCollectionProperty(ResolvableParameter parameter) throws Exception {
+		if (parameter.getBindType() == parameter.B_BEAN) {
+			List<Object> list = JSONArray.parseArray(parameter.getFieldValue(), parameter.getBindClass());
+			if (CollectionUtils.isNotEmpty(list)) {
+				for (Object o : list) {
+					maskField((T) o);
+				}
+			}
+			parameter.getField().setAccessible(true);
+			parameter.getField().set(parameter.getT(), list);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void maskProtery(ResolvableParameter parameter) throws Exception {
+		if (parameter.getBindType() == parameter.B_STRING) {
+			_mask(parameter);
+		} else if (parameter.getBindType() == parameter.B_BEAN) {
+			Object o = JSON.parseObject(parameter.getFieldValue(), parameter.getBindClass());
+			maskField((T) o);
+			parameter.getField().setAccessible(true);
+			parameter.getField().set(parameter.getT(), o);
+		}
+	}
+
+	private void _mask(ResolvableParameter parameter) throws Exception {
+		if (StringUtils.isNotBlank(parameter.getFieldValue())
+				&& parameter.getField().getAnnotation(MaskCodeAnnotation.class) != null) {
+			MaskStrategy maskStrategy = MaskFactory.getMaskStrategy(
+					parameter.getField().getAnnotation(MaskCodeAnnotation.class), parameter.getFieldValue(),
+					parameter.getField(), parameter.getT(), parameter.getDescribe());
+			maskStrategy.mask();
+		}
 	}
 
 	public static MaskFieldByAnnotationUtil getInstance() {

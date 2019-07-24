@@ -2,7 +2,8 @@ package com.taotao.enums;
 
 public enum MaskLevelEnum {
 	DEFAULTLEVEL(0, 0), LEVEL1(4, 7), LEVEL2(2, Integer.MAX_VALUE), LEVEL3(12, 17), CARDLEVEL(-1,
-			0), LARGELEVEL(Integer.MAX_VALUE, Integer.MAX_VALUE);
+			0), LARGELEVEL(Integer.MAX_VALUE, Integer.MAX_VALUE),
+	NAMELEVEL(-1, 0);
 	private Integer beginIndex;
 	private Integer endIndex;
 

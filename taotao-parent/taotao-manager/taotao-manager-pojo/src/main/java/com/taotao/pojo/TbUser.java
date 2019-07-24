@@ -1,6 +1,7 @@
 package com.taotao.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 import com.taotao.annotation.MaskCodeAnnotation;
 import com.taotao.enums.MaskLevelEnum;
@@ -15,11 +16,12 @@ public class TbUser extends BaseDto{
     private String phone;
 
     private String email;
-
+    
     private Date created;
 
     private Date updated;
-
+    private TbOrder order;
+    private List<TbOrder> list;
     public Long getId() {
         return id;
     }
@@ -75,4 +77,22 @@ public class TbUser extends BaseDto{
     public void setUpdated(Date updated) {
         this.updated = updated;
     }
+
+
+	public List<TbOrder> getList() {
+		return list;
+	}
+
+	public void setList(List<TbOrder> list) {
+		this.list = list;
+	}
+
+	public TbOrder getOrder() {
+		return order;
+	}
+
+	public void setOrder(TbOrder order) {
+		this.order = order;
+	}
+    
 }

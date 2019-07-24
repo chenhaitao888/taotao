@@ -1,8 +1,13 @@
 package com.taotao.pojo;
 
 import java.util.Date;
+import java.util.List;
 
-public class TbOrder {
+import com.taotao.annotation.MaskCodeAnnotation;
+import com.taotao.enums.MaskLevelEnum;
+
+public class TbOrder extends BaseDto{
+	@MaskCodeAnnotation(maskLevel = MaskLevelEnum.NAMELEVEL)
     private String orderId;
 
     private String payment;
@@ -36,7 +41,7 @@ public class TbOrder {
     private String buyerNick;
 
     private Integer buyerRate;
-
+    private List<TbUser> users;
     public String getOrderId() {
         return orderId;
     }
@@ -172,4 +177,13 @@ public class TbOrder {
     public void setBuyerRate(Integer buyerRate) {
         this.buyerRate = buyerRate;
     }
+
+	public List<TbUser> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<TbUser> users) {
+		this.users = users;
+	}
+    
 }
