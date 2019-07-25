@@ -28,11 +28,11 @@ public class AopServiceImpl implements AopService{
 		u1.setPhone("13333333333");
 		u2.setPhone("14444444444");
 		users.add(u1);
-		//users.add(u2);
+		users.add(u2);
 		o.setUsers(users);
 		o.setOrderId("adadaad");
 		o.setPayment("woshisds");
-		//list.add(o);
+		list.add(o);
 		u.setOrder(o);
 		u.setList(list);
 		Map<String, Object> map = new HashMap<>();

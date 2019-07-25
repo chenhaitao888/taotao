@@ -46,14 +46,16 @@ public class MaskFieldByAnnotationUtil<T extends BaseDto> {
 
 	private void maskCollectionProperty(ResolvableParameter parameter) throws Exception {
 		if (parameter.getBindType() == parameter.B_BEAN) {
-			List<Object> list = JSONArray.parseArray(parameter.getFieldValue(), parameter.getBindClass());
-			if (CollectionUtils.isNotEmpty(list)) {
-				for (Object o : list) {
-					maskField((T) o);
+			if(StringUtils.isNotBlank(parameter.getFieldValue())){
+				List<Object> list = JSONArray.parseArray(parameter.getFieldValue(), parameter.getBindClass());
+				if (CollectionUtils.isNotEmpty(list)) {
+					for (Object o : list) {
+						maskField((T) o);
+					}
 				}
+				parameter.getField().setAccessible(true);
+				parameter.getField().set(parameter.getT(), list);
 			}
-			parameter.getField().setAccessible(true);
-			parameter.getField().set(parameter.getT(), list);
 		}
 	}
 
@@ -63,9 +65,11 @@ public class MaskFieldByAnnotationUtil<T extends BaseDto> {
 			_mask(parameter);
 		} else if (parameter.getBindType() == parameter.B_BEAN) {
 			Object o = JSON.parseObject(parameter.getFieldValue(), parameter.getBindClass());
-			maskField((T) o);
-			parameter.getField().setAccessible(true);
-			parameter.getField().set(parameter.getT(), o);
+			if(o != null){
+				maskField((T) o);
+				parameter.getField().setAccessible(true);
+				parameter.getField().set(parameter.getT(), o);
+			}
 		}
 	}
 
