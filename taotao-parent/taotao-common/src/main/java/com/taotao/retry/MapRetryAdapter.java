@@ -27,7 +27,8 @@ public class MapRetryAdapter extends AbstractRetryAdapter implements RetryAdapte
 				.retryIfResult(Predicates.equalTo(map))
 				.withWaitStrategy(WaitStrategies.fixedWait(this.waitTime, this.timeUnit))
                 //尝试次数
-                .withStopStrategy(StopStrategies.stopAfterAttempt(this.retryCount))
+                //.withStopStrategy(StopStrategies.stopAfterAttempt(this.retryCount))
+				.withStopStrategy(StopStrategies.neverStop())
                 .withBlockStrategy(BlockStrategies.threadSleepStrategy())
                 .build();
 		return newBuilder;

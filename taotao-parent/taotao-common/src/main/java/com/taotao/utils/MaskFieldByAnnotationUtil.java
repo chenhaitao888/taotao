@@ -76,10 +76,12 @@ public class MaskFieldByAnnotationUtil<T extends BaseDto> {
 	private void _mask(ResolvableParameter parameter) throws Exception {
 		if (StringUtils.isNotBlank(parameter.getFieldValue())
 				&& parameter.getField().getAnnotation(MaskCodeAnnotation.class) != null) {
-			MaskStrategy maskStrategy = MaskFactory.getMaskStrategy(
+			/*MaskStrategy maskStrategy = MaskFactory.getMaskStrategy(
 					parameter.getField().getAnnotation(MaskCodeAnnotation.class), parameter.getFieldValue(),
 					parameter.getField(), parameter.getT(), parameter.getDescribe());
-			maskStrategy.mask();
+			maskStrategy.mask();*/
+			MaskFactory.getMaskStrategy(parameter.getField().getAnnotation(MaskCodeAnnotation.class), parameter.getFieldValue(),
+					parameter.getField(), parameter.getT(), parameter.getDescribe());
 		}
 	}
 

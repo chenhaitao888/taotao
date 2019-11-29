@@ -10,8 +10,13 @@ import com.taotao.service.DistributedLockService;
 @Service
 public class DistributedLockServiceImpl implements DistributedLockService {
 	@Override
-	@DistributedLock(param = "id", lockSuffix = "lock")
+	@DistributedLock(param = "id", lockSuffix = "lock", leaseTime = -1L)
 	public int distributedLockTest(TbUser user, Supplier<Integer> supplier) {
+		/*try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}*/
 		return supplier.get();
 	}
 	

@@ -23,8 +23,10 @@ public class AopServiceImpl implements AopService{
 		TbOrder o = new TbOrder();
 		List<TbOrder> list = new ArrayList<>();
 		List<TbUser> users = new ArrayList<>();
-		u.setUsername("陈海涛");
+		u.setUsername("c");
 		u.setPhone("17712922485");
+		u.setCard("321281198902062093");
+		u.setCardType("Ind01");
 		u1.setPhone("13333333333");
 		u2.setPhone("14444444444");
 		users.add(u1);
@@ -32,6 +34,8 @@ public class AopServiceImpl implements AopService{
 		o.setUsers(users);
 		o.setOrderId("adadaad");
 		o.setPayment("woshisds");
+		o.setCard("321281198902062093");
+		o.setCardType("Ind01");
 		list.add(o);
 		u.setOrder(o);
 		u.setList(list);

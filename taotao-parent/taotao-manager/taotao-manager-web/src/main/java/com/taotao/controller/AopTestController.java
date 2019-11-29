@@ -35,7 +35,7 @@ public class AopTestController {
 	@Autowired
 	private AopService aopService;
 	
-	@Autowired
+	//@Autowired
 	private SimpleDistributedLock lock;
 	@RequestMapping("/aop/test")
 	@ResponseBody

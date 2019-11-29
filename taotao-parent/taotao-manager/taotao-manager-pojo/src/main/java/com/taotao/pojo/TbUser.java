@@ -8,7 +8,7 @@ import com.taotao.enums.MaskLevelEnum;
 
 public class TbUser extends BaseDto{
     private Long id;
-    
+    @MaskCodeAnnotation(maskLevel = MaskLevelEnum.NAMELEVEL)
     private String username;
 
     private String password;
@@ -16,7 +16,9 @@ public class TbUser extends BaseDto{
     private String phone;
 
     private String email;
-    
+    @MaskCodeAnnotation(maskLevel = MaskLevelEnum.CARDLEVEL, key = "cardType")
+    private String card;
+    private String cardType;
     private Date created;
 
     private Date updated;
@@ -94,5 +96,22 @@ public class TbUser extends BaseDto{
 	public void setOrder(TbOrder order) {
 		this.order = order;
 	}
+
+	public String getCard() {
+		return card;
+	}
+
+	public void setCard(String card) {
+		this.card = card;
+	}
+
+	public String getCardType() {
+		return cardType;
+	}
+
+	public void setCardType(String cardType) {
+		this.cardType = cardType;
+	}
+	
     
 }

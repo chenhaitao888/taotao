@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.taotao.pojo.EUDataGridResult;
 import com.taotao.pojo.TbItem;
 import com.taotao.pojo.TbItemDesc;
@@ -30,6 +31,7 @@ public class ItemController {
 	@ResponseBody
 	public TbItem getItemById(@PathVariable Long itemId){
 		TbItem item = itemService.getItemById(itemId);
+		System.out.println(JSON.toJSONString(item));
 		return item;
 	}
 	

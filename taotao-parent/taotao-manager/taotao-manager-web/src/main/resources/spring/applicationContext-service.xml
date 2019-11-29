@@ -12,7 +12,7 @@
 	<!-- 扫描包加载Service实现类 -->
 	<context:component-scan base-package="com.taotao.service,com.taotao.aop" />
 	
-	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<aop:aspectj-autoproxy proxy-target-class="true" expose-proxy="true"/>
 	<!-- <bean id="maskAspect" class="com.taotao.aop.MaskAspect" /> -->
 	<bean id="beanFactory" class="com.taotao.factory.BeanFactory"></bean>
 </beans>

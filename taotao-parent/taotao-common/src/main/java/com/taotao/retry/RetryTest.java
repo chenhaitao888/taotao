@@ -10,11 +10,12 @@ import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import com.google.common.base.Predicates;
+import com.taotao.exception.TaoTaoException;
 
 public class RetryTest {
 	public void retryTest(){
 		Retryer<Boolean> newBuilder = RetryerBuilder.<Boolean>newBuilder()
-											.retryIfException()
+											.retryIfExceptionOfType(NullPointerException.class)
 											.retryIfResult(Predicates.equalTo(false))
 											.withWaitStrategy(WaitStrategies.fixedWait(3, TimeUnit.SECONDS))
 							                //尝试次数
@@ -24,9 +25,15 @@ public class RetryTest {
 			newBuilder.call(new Callable<Boolean>() {
 				
 				@Override
-				public Boolean call() throws Exception {
-					System.out.println("重试测试");
-					return false;
+				public Boolean call() /*throws TaoTaoException*/ {
+					//try {
+						System.out.println("重试测试");
+						String s = null;
+						s.split(",");
+					/*} catch (Exception e) {
+						throw new TaoTaoException();
+					}*/
+					return true;
 				}
 			});
 		} catch (ExecutionException | RetryException e) {

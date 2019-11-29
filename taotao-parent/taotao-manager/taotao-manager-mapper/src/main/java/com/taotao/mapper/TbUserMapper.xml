@@ -240,4 +240,7 @@
       updated = #{updated,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="qryUsr" resultMap="BaseResultMap">
+  select username from tb_user
+  </select>
 </mapper>

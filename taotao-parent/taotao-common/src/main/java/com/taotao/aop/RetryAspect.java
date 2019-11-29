@@ -30,7 +30,7 @@ public class RetryAspect {
 		return retryAdapter.call(new Callable<Object>() {
 
 			@Override
-			public Object call() throws Exception {
+			public Object call() {
 				getA();
 				a.incrementAndGet();
 				Object o = proceed(point);

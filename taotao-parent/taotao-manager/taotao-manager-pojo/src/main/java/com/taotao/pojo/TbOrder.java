@@ -39,7 +39,9 @@ public class TbOrder extends BaseDto{
     private String buyerMessage;
 
     private String buyerNick;
-
+    @MaskCodeAnnotation(maskLevel = MaskLevelEnum.CARDLEVEL, key = "cardType")
+    private String card;
+    private String cardType;
     private Integer buyerRate;
     private List<TbUser> users;
     public String getOrderId() {
@@ -184,6 +186,22 @@ public class TbOrder extends BaseDto{
 
 	public void setUsers(List<TbUser> users) {
 		this.users = users;
+	}
+
+	public String getCard() {
+		return card;
+	}
+
+	public void setCard(String card) {
+		this.card = card;
+	}
+
+	public String getCardType() {
+		return cardType;
+	}
+
+	public void setCardType(String cardType) {
+		this.cardType = cardType;
 	}
     
 }
