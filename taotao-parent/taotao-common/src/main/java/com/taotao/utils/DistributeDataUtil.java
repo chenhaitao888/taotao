@@ -22,7 +22,7 @@ public class DistributeDataUtil {
 		this.segments = segments;
 		this.batchData = batchData;
 		this.totalData = totalData;
-		this.batches = isOperation(batchData) ? totalData >> count() : ((totalData % batchData == 0) ? 
+		this.batches = (isOperation(batchData) && isOperation(totalData) && (totalData > batchData)) ? totalData >> count() : ((totalData % batchData == 0) ? 
 				totalData / batchData : totalData / batchData + 1);
 	}
 	
@@ -44,7 +44,7 @@ public class DistributeDataUtil {
 	}
 	
 	private int indexFor(int batch, int segments) {
-		return batch & (segments - 1);
+		return batch & (segments - 1); // 此处借用hashmap取模的技巧(前提是segments为2的幂),位运算提升运算效率
 	}
 
 
@@ -57,14 +57,14 @@ public class DistributeDataUtil {
 		return i;
 	}
 	private boolean isOperation(int v) {
-		return (v & (v - 1)) == 0;
+		return (v & (v - 1)) == 0;  //判断v是不是2的幂
 	}
 	
 	public static void main(String[] args) {
 		long start = System.currentTimeMillis();
 		int segments = 8;
 		int batchData = 1 << 10;
-		int totalData = 223103989;
+		int totalData = 2231039;
 		DistributeDataUtil util = new DistributeDataUtil(segments, batchData, totalData);
 		for(int i = 0; i < segments; i++){
 			List assiginSegmentData = util.assiginSegmentData(i);
