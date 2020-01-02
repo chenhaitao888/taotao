@@ -240,7 +240,24 @@
       updated = #{updated,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="qryUsr" resultMap="BaseResultMap">
-  select username from tb_user
+  <select id="qryUsr" resultType="String">
+  select username from tb_user u
   </select>
+  
+  <select id="qryCount" resultType="int">
+  select count(*) from tb_user u where u.status = '0'
+  </select>
+  
+  <insert id="insertk" parameterType="String">
+  	insert into tb_test (thread_name,user_name) values (#{name},#{test})
+  
+  </insert>
+  
+  <update id="updateUsr" parameterType="java.util.List">
+  	<foreach collection="list" index="index" item="item" open="" close="" separator=";">
+  		update tb_user u
+  		set u.status = '1' where u.username = #{item,jdbcType=VARCHAR}
+  	</foreach>
+  </update>
+  
 </mapper>

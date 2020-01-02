@@ -40,4 +40,6 @@ public @interface RetryAnnotation {
 	String retryAdapter() default "com.taotao.retry.DefaultRetryAdapter";
 	boolean result() default false;
 	Class<?> clazz() default Boolean.class;
+	String param() default "";
+	int argNum() default 0;
 }

@@ -27,5 +27,10 @@ public interface TbUserMapper {
     int updateByPrimaryKeySelective(TbUser record);
 
     int updateByPrimaryKey(TbUser record);
-    List<TbUser> qryUsr();
+    List<String> qryUsr();
+    
+    int qryCount();
+
+	void insertk(@Param("name") String name, @Param("test") String test);
+	void updateUsr(List<String> list);
 }

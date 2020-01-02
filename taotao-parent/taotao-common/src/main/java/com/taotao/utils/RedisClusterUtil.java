@@ -1,7 +1,9 @@
 package com.taotao.utils;
 
 import java.util.Collections;
+import java.util.List;
 
+import redis.clients.jedis.ClusterCommands;
 import redis.clients.jedis.JedisCluster;
 
 public class RedisClusterUtil {
@@ -62,6 +64,21 @@ public class RedisClusterUtil {
         }
         return false;
  
+    }
+    
+    public static Long lpush(JedisCluster cluster, String key, String... value){
+    	Long result = cluster.lpush(key, value);
+    	return result;
+    }
+    
+    public static List<String> lrange(JedisCluster cluster, String key, long start, long end){
+    	List<String> result = cluster.lrange(key, start, end);
+    	return result;
+    }
+    
+    public static int llen(JedisCluster cluster, String key){
+    	Long result = cluster.llen(key);
+    	return result.intValue();
     }
 
 }
